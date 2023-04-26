@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chat de WhatsApp</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .chat-container {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    .chat-message {
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+      clear: both;
+      max-width: 75%;
+    }
+
+    .chat-message.incoming {
+      background-color: #DCF8C6;
+      float: left;
+      margin-right: 25%;
+    }
+
+    .chat-message.outgoing {
+      background-color: #E5E5EA;
+      float: right;
+      margin-left: 25%;
+    }
+
+    .chat-message .chat-time {
+      position: absolute;
+      bottom: -20px;
+      font-size: 10px;
+    }
+
+    @media screen and (max-width: 576px) {
+      .chat-message {
+        max-width: 100%;
+      }
+
+      .chat-message.incoming {
+        float: none;
+        margin-right: 0;
+      }
+
+      .chat-message.outgoing {
+        float: none;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Conexión de Socket.IO al servidor
+    var socket = io();
+
+    // Función para enviar mensajes del chat 1
+    function enviarMensaje1() {
+      var mensaje = document.getElementById('mensaje1').value;
+      socket.emit('chat message 1', mensaje);
+      document.getElementById('mensaje1').value = '';
+      return false;
+    }
+
+    // Función para recibir mensajes del chat 1
+    socket.on('chat message 1', function (msg) {
+      var listaMensajes = document.getElementById('lista-mensajes1');
+      var mensaje = document.createElement('li');
+      mensaje.textContent = "Miluska: " + msg;
+      listaMensajes.appendChild(mensaje);
+    });
+
+    // Función para enviar mensajes del chat 2
+    function enviarMensaje2() {
+      var mensaje = document.getElementById('mensaje2').value;
+      socket.emit('chat message 2', mensaje);
+      document.getElementById('mensaje2').value = '';
+      return false;
+    }
+
+    // Función para recibir mensajes del chat 2
+    socket.on('chat message 2', function (msg) {
+      var listaMensajes = document.getElementById('lista-mensajes2');
+      var mensaje = document.createElement('li');
+      mensaje.textContent = "Tú: " + msg;
+      listaMensajes.appendChild(mensaje);
+    });
+   
+  </script>
+  <div class="container">
+    <p>
+      <center><img
+          src="data:image/png;base64,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"
+          alt="icono sapo" width="50" height="50">
+        <strong>WhatSapo</strong></center>
+      <div class="row" style="">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header" style="border: 2px solid black;">Contactos</div>
+            <ul class="list-group list-group-flush" style="border: 2px solid black;">
+              <li class="list-group-item">Juan</li>
+              <li class="list-group-item">Ana</li>
+              <li class="list-group-item">Pedro</li>
+              <li class="list-group-item">María</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-8" style="width: 300px; ">
+          <div class="card" style="border: 2px solid black;">
+            <div class="card-header" style="border: 2px solid black; background-color: cornflowerblue;"><img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqVV6WGaYridADcoGdjXKvHDrc5HV-q2E-GA&usqp=CAU"
+                alt="icono sapo" width="50" height="50">
+              <strong>Miluska</strong></div>
+
+
+
+
+            <div class="chat-container">
+              <div class="chat-message incoming">
+                <p id="lista-mensajes1"></p>
+                <span class="chat-time" > 11:33</span>
+              </div>
+            </div>
+
+            <div class="chat-container">
+              <div class="chat-message outgoing">
+                <p id="lista-mensajes2"></p>
+                <span class="chat-time">11:32 AM</span>
+              </div>
+            </div>
+
+
+
+            <div class="card-footer" style="background-color: rgb(0, 75, 100); border: 2px solid black;">
+              <div class="input-group">
+                <div class="input-group-append">
+                  <form onsubmit="return enviarMensaje1()">
+                    <input id="mensaje1" autocomplete="off" placeholder="chat 1" />
+                    <button>Enviar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer" style="background-color: darkgreen;border: 2px solid black;">
+              <div class="input-group">
+                <div class="input-group-append">
+                  <form onsubmit="return enviarMensaje2()">
+                    <input id="mensaje2" autocomplete="off" placeholder="chat 2" />
+                    <button>Enviar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
